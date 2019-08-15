@@ -11,6 +11,5 @@ export class WantedByExpression extends Expression {
         }
         const name = lineDecomposition[1];
         bulletin.want(name);
-        console.log('want', name);
     }
 }

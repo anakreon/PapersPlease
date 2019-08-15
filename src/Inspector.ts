@@ -24,14 +24,11 @@ export class Inspector {
         const rulesetBuilder = new RulesetBuilder();
         rulesetBuilder.fromBulletin(this.bulletin);
         this.ruleset = rulesetBuilder.getRuleset();
-        console.log('xxx', this.bulletin);
     }
 
     public inspect (inputPapers: InputPapers): InspectionResult {
 
-        /*translates input string to Papers object - optional?*/
         const papers = this.buildPapers(inputPapers);
-
         const detainmentRule = this.ruleset.getDetainmentRule(papers);
         if (detainmentRule) {
             return 'Detainment: ' + detainmentRule.getErrorMessage();

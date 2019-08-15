@@ -3,14 +3,14 @@ import { allNations } from './constants';
 
 export class Bulletin {
     private denied: Set<Nation>;
-    private citizensOfNationRequireDocument: { [nation: string]: Set<Document> };
-    private groupRequireDocument: { [group: string]: Set<Document> };
+    private requiredDocumentsByNation: { [nation: string]: Set<Document> };
+    private requiredDocumentsByGroup: { [group: string]: Set<Document> };
     private wantedName: string;
 
     constructor () {
         this.denied = new Set<Nation>();
-        this.citizensOfNationRequireDocument = {};
-        this.groupRequireDocument = {};
+        this.requiredDocumentsByNation = {};
+        this.requiredDocumentsByGroup = {};
         this.wantedName = '';
     }
     
@@ -22,36 +22,36 @@ export class Bulletin {
     public deny (nation: Nation): void {
         this.denied.add(nation);
     }
-    public citizensOfNationRequire (nation: Nation, document: Document): void {
-        this.citizensOfNationRequireDocument[nation] = this.citizensOfNationRequireDocument[nation] || new Set<Document>();
-        this.citizensOfNationRequireDocument[nation].add(document);
+    public requireDocumentForNation (nation: Nation, document: Document): void {
+        this.requiredDocumentsByNation[nation] = this.requiredDocumentsByNation[nation] || new Set<Document>();
+        this.requiredDocumentsByNation[nation].add(document);
     }
-    public citizensOfNationNoLongerRequire (nation: Nation, document: Document): void {
-        this.citizensOfNationRequireDocument[nation] = this.citizensOfNationRequireDocument[nation] || new Set<Document>();
-        this.citizensOfNationRequireDocument[nation].delete(document);
+    public noLongerRequireDocumentForNation (nation: Nation, document: Document): void {
+        this.requiredDocumentsByNation[nation] = this.requiredDocumentsByNation[nation] || new Set<Document>();
+        this.requiredDocumentsByNation[nation].delete(document);
     }
-    public groupRequire (group: Group, document: Document): void {
-        this.groupRequireDocument[group] = this.groupRequireDocument[group] || new Set<Document>();
-        this.groupRequireDocument[group].add(document);
+    public requireDocumentForGroup (group: Group, document: Document): void {
+        this.requiredDocumentsByGroup[group] = this.requiredDocumentsByGroup[group] || new Set<Document>();
+        this.requiredDocumentsByGroup[group].add(document);
     }
-    public groupNoLongerRequire (group: Group, document: Document): void {
-        this.groupRequireDocument[group] = this.groupRequireDocument[group] || new Set<Document>();
-        this.groupRequireDocument[group].delete(document);
+    public noLongerRequireDocumentForGroup (group: Group, document: Document): void {
+        this.requiredDocumentsByGroup[group] = this.requiredDocumentsByGroup[group] || new Set<Document>();
+        this.requiredDocumentsByGroup[group].delete(document);
     }
     public allRequire (document: Document): void {
         allNations.forEach((nation: Nation) => {
-            this.citizensOfNationRequire(<Nation>nation, document);
+            this.requireDocumentForNation(<Nation>nation, document);
         });
     }
     public noneRequire (document: Document): void {
-        for (var nation in this.citizensOfNationRequireDocument) {
-            if (this.citizensOfNationRequireDocument.hasOwnProperty(nation)) {
-                this.citizensOfNationNoLongerRequire(<Nation>nation, document);
+        for (var nation in this.requiredDocumentsByNation) {
+            if (this.requiredDocumentsByNation.hasOwnProperty(nation)) {
+                this.noLongerRequireDocumentForNation(<Nation>nation, document);
             }
         }
-        for (var group in this.groupRequireDocument) {
-            if (this.groupRequireDocument.hasOwnProperty(group)) {
-                this.groupNoLongerRequire(<Group>group, document);
+        for (var group in this.requiredDocumentsByGroup) {
+            if (this.requiredDocumentsByGroup.hasOwnProperty(group)) {
+                this.noLongerRequireDocumentForGroup(<Group>group, document);
             }
         }
     }
@@ -61,5 +61,18 @@ export class Bulletin {
     }
     public clearWanted (): void {
         this.wantedName = '';
+    }
+
+    public getDenied (): Set<Nation> {
+        return this.denied;
+    }
+    public getRequiredDocumentsByNation (): { [nation: string]: Set<Document> } {
+        return this.requiredDocumentsByNation;
+    }
+    public getRequiredDocumentsByGroup (): { [group: string]: Set<Document> } {
+        return this.requiredDocumentsByGroup;
+    }
+    public getWantedName (): string {
+        return this.wantedName;
     }
 }

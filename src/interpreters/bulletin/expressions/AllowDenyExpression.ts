@@ -13,10 +13,8 @@ export class AllowDenyExpression extends Expression {
         const operation = lineDecomposition[1]; 
         const nations = lineDecomposition[2].split(',');
         if (operation === 'Allow') {
-            console.log('allow nations', nations);
             nations.forEach((nation: Nation) => bulletin.allow(nation));
         } else {
-            console.log('deny nations', nations);
             nations.forEach((nation: Nation) => bulletin.deny(nation));
         }
     }
