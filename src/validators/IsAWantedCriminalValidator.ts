@@ -1,10 +1,10 @@
 import { Validator, Papers } from '../types';
 
-export class IsNotAWantedCriminalValidator implements Validator {
+export class IsAWantedCriminalValidator implements Validator {
     constructor (private criminalName: string) {}
 
     public validate (papers: Papers): boolean {
         const personalData = papers.getPersonalData();
-        return personalData.getName() !== this.criminalName;
+        return personalData.getName() === this.criminalName;
     }
 }

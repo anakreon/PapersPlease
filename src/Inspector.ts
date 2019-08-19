@@ -8,7 +8,8 @@ import { Bulletin } from './Bulletin';
 import { BulletinInterpreter } from './interpreters/bulletin/BulletinInterpreter';
 import { RulesetBuilder } from './RulesetBuilder';
 import { Ruleset } from './Ruleset';
-
+import { CertificateOfVaccinationInterpreter } from './interpreters/paper/CertificateOfVaccinationInterpreter';
+import { IdCardInterpreter } from './interpreters/paper/IdCardInterpreter';
 
 export class Inspector {
     private bulletin: Bulletin;
@@ -19,16 +20,20 @@ export class Inspector {
     }
     
     public receiveBulletin (inputBulletin: string): void {
+        console.log('inputBulletin', inputBulletin);
         const interpreter = new BulletinInterpreter();
         interpreter.interpret(this.bulletin, inputBulletin);
         const rulesetBuilder = new RulesetBuilder();
         rulesetBuilder.fromBulletin(this.bulletin);
         this.ruleset = rulesetBuilder.getRuleset();
+        console.log('updatedBulletin: ', this.bulletin);
+        console.log('updatedRuleset: ', this.ruleset);
     }
 
     public inspect (inputPapers: InputPapers): InspectionResult {
-
+        console.log('inputPapers: ', inputPapers);
         const papers = this.buildPapers(inputPapers);
+        console.log('papers', papers);
         const detainmentRule = this.ruleset.getDetainmentRule(papers);
         if (detainmentRule) {
             return 'Detainment: ' + detainmentRule.getErrorMessage();
@@ -66,6 +71,16 @@ export class Inspector {
             const interpreter = new PassportInterpreter();
             const passport = interpreter.interpret(inputPapers.passport);
             papers.setPassport(passport);
+        }
+        if (inputPapers.certificate_of_vaccination) {
+            const interpreter = new CertificateOfVaccinationInterpreter();
+            const certificateOfVaccination = interpreter.interpret(inputPapers.certificate_of_vaccination);
+            papers.setCertificateOfVaccination(certificateOfVaccination);
+        }
+        if (inputPapers.ID_card) {
+            const interpreter = new IdCardInterpreter();
+            const idCard = interpreter.interpret(inputPapers.ID_card);
+            papers.setIdCard(idCard);
         }
         return papers;
     }

@@ -1,11 +1,12 @@
 import { Papers, WeightGetter } from '../types';
-import { InconsistencyValidator } from './InconsistencyValidator';
+import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class WeightInconsistencyValidator extends InconsistencyValidator<WeightGetter, string> {
+export class WeightConsistencyValidator extends ConsistencyValidator<WeightGetter, string> {
     protected getRelatedPapers (papers: Papers): WeightGetter[] {
         return [ 
             papers.getAccessPermit(),
-            papers.getGrantOfAsylum()
+            papers.getGrantOfAsylum(),
+            papers.getIdCard()
         ];
     }
 

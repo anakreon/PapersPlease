@@ -1,11 +1,12 @@
 import { Papers, HeightGetter } from '../types';
-import { InconsistencyValidator } from './InconsistencyValidator';
+import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class HeightInconsistencyValidator extends InconsistencyValidator<HeightGetter, string> {
+export class HeightConsistencyValidator extends ConsistencyValidator<HeightGetter, string> {
     protected getRelatedPapers (papers: Papers): HeightGetter[] {
         return [ 
             papers.getAccessPermit(),
-            papers.getGrantOfAsylum()
+            papers.getGrantOfAsylum(),
+            papers.getIdCard()
         ];
     }
 

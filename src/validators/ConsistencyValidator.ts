@@ -1,6 +1,6 @@
 import { Validator, Papers } from '../types';
 
-export abstract class InconsistencyValidator<T, S> implements Validator {
+export abstract class ConsistencyValidator<T, S> implements Validator {
     public validate (papers: Papers): boolean {
         return this.getRelatedPapers(papers)
             .filter(this.hasPaper)
@@ -16,6 +16,5 @@ export abstract class InconsistencyValidator<T, S> implements Validator {
     }
     private isEveryValueSame(currentValue: S, index: number, array: S[]): boolean {
         return index === 0 || currentValue === array[index - 1];
-        //return index !== 0 && currentValue !== array[index - 1];
     }
 }

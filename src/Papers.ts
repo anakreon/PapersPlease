@@ -3,12 +3,16 @@ import { AccessPermit } from './papers/AccessPermit';
 import { GrantOfAsylum } from './papers/GrantOfAsylum';
 import { DiplomaticAuthorization } from './papers/DiplomaticAuthorization';
 import { PersonalData } from './papers/PersonalData';
+import { IdCard } from './papers/IdCard';
+import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
 
 export class Papers {
     private passport: Passport;
     private accessPermit: AccessPermit;
     private grantOfAsylum: GrantOfAsylum;
     private diplomaticAuthorization: DiplomaticAuthorization;
+    private certificateOfVaccination: CertificateOfVaccination;
+    private idCard: IdCard;
     private personalData: PersonalData;
     
     constructor () {
@@ -29,6 +33,15 @@ export class Papers {
     }
     public setDiplomaticAuthorization (diplomaticAuthorization: DiplomaticAuthorization): void {
         this.diplomaticAuthorization = diplomaticAuthorization;
+        this.personalData.fromDiplomaticAuthorization(diplomaticAuthorization);
+    }
+    public setCertificateOfVaccination (certificateOfVaccination: CertificateOfVaccination): void {
+        this.certificateOfVaccination = certificateOfVaccination;
+        this.personalData.fromCertificateOfVaccination(certificateOfVaccination);
+    }
+    public setIdCard (idCard: IdCard): void {
+        this.idCard = idCard;
+        this.personalData.fromIdCard(idCard);
     }
 
     public getPassport (): Passport {
@@ -42,6 +55,12 @@ export class Papers {
     }
     public getDiplomaticAuthorization (): DiplomaticAuthorization {
         return this.diplomaticAuthorization;
+    }
+    public getCertificateOfVaccination (): CertificateOfVaccination {
+        return this.certificateOfVaccination;
+    }
+    public getIdCard (): IdCard {
+        return this.idCard;
     }
     public getPersonalData (): PersonalData {
         return this.personalData;

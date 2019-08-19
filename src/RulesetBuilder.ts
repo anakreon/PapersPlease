@@ -1,12 +1,12 @@
 import { Ruleset } from './Ruleset';
 import { Rule } from './Rule';
-import { IdInconsistencyValidator } from './validators/IdInconsistencyValidator';
-import { DOBInconsistencyValidator } from './validators/DOBInconsistencyValidator';
-import { HeightInconsistencyValidator } from './validators/HeightInconsistencyValidator';
-import { NameInconsistencyValidator } from './validators/NameInconsistencyValidator';
-import { WeightInconsistencyValidator } from './validators/WeightInconsistencyValidator';
+import { IdConsistencyValidator } from './validators/IdConsistencyValidator';
+import { DOBConsistencyValidator } from './validators/DOBConsistencyValidator';
+import { HeightConsistencyValidator } from './validators/HeightConsistencyValidator';
+import { NameConsistencyValidator } from './validators/NameConsistencyValidator';
+import { WeightConsistencyValidator } from './validators/WeightConsistencyValidator';
 import { Bulletin } from './Bulletin';
-import { Nation, Document, Validator, Group } from './types';
+import { Nation, Document, Validator, Vaccine } from './types';
 import { IsCitizenOfNationValidator } from './validators/IsCitizenOfNationValidator';
 import { ImplicativeValidator } from './validators/ImplicativeValidator';
 import { HasPassportValidator } from './validators/HasPassportValidator';
@@ -14,86 +14,122 @@ import { HasAccessPermitValidator } from './validators/HasAccessPermitValidator'
 import { HasGrantOfAsylumValidator } from './validators/HasGrantOfAsylumValidator';
 import { HasDiplomaticAuthorizationValidator } from './validators/HasDiplomaticAuthorizationValidator';
 import { IsWorkerValidator } from './validators/IsWorkerValidator';
-import { IsNotAWantedCriminalValidator } from './validators/IsNotAWantedCriminalValidator';
+import { IsAWantedCriminalValidator } from './validators/IsAWantedCriminalValidator';
+import { IsPassportExpiredValidator } from './validators/IsPassportExpiredValidator';
+import { IsAccessPermitExpiredValidator } from './validators/IsAccessPermitExpiredValidator';
+import { IsGrantOfAsylumExpiredValidator } from './validators/IsGrantOfAsylumExpiredValidator';
+import { IsDiplomaticAuthorizationExpiredValidator } from './validators/IsDiplomaticAuthorizationExpiredValidator';
+import { NegateValidator } from './validators/NegateValidator';
+import { NationConsistencyValidator } from './validators/NationConsistencyValidator';
+import { HasIdCardValidator } from './validators/HasIDCardValidator';
+import { HasVaccinationValidator } from './validators/HasVaccinationValidator';
 
 export class RulesetBuilder {
     private deny: Rule[] = [];
     private detain: Rule[] = [
-        new Rule(new IdInconsistencyValidator(), 'ID number mismatch.'),
-        new Rule(new DOBInconsistencyValidator(), 'Date of birth mismatch.'),
-        new Rule(new HeightInconsistencyValidator(), 'Height mismatch.'),
-        new Rule(new NameInconsistencyValidator(), 'Name mismatch.'),
-        new Rule(new WeightInconsistencyValidator(), 'Weight mismatch.')
+        new Rule(new NegateValidator(new IdConsistencyValidator()), 'ID number mismatch.'),
+        new Rule(new NegateValidator(new DOBConsistencyValidator()), 'Date of birth mismatch.'),
+        new Rule(new NegateValidator(new HeightConsistencyValidator()), 'Height mismatch.'),
+        new Rule(new NegateValidator(new NameConsistencyValidator()), 'Name mismatch.'),
+        new Rule(new NegateValidator(new NationConsistencyValidator()), 'nationality mismatch.'),
+        new Rule(new NegateValidator(new WeightConsistencyValidator()), 'Weight mismatch.')
     ];
 
     public fromBulletin (bulletin: Bulletin): void {
         bulletin.getDenied().forEach((nation: Nation) => {
-            this.deny.push(new Rule(new IsCitizenOfNationValidator(nation), nation + ' citizens not allowed.'));
+            this.deny.push(new Rule(new IsCitizenOfNationValidator(nation), 'citizen of banned nation.'));
         });
         const requiredDocumentsByNation = bulletin.getRequiredDocumentsByNation();
         for (var nation in requiredDocumentsByNation) {
             if (requiredDocumentsByNation.hasOwnProperty(nation)) {
                 requiredDocumentsByNation[nation].forEach((document: Document) => {
-                    const documentValidator = this.getDocumentValidator(document);
-                    this.deny.push(new Rule(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), documentValidator), 'missing required ' + document + '.'));
+                    this.addDocumentValidatorsForNation(<Nation>nation, document);
                 });
             }
         }
-        const requiredDocumentsByGroup = bulletin.getRequiredDocumentsByGroup();
-        for (var group in requiredDocumentsByGroup) {
-            if (requiredDocumentsByGroup.hasOwnProperty(group)) {
-                requiredDocumentsByGroup[group].forEach((document: Document) => {
-                    const groupValidator = this.getGroupValidator(<Group>group);
-                    const documentValidator = this.getDocumentValidator(document);
-                    this.deny.push(new Rule(new ImplicativeValidator(groupValidator, documentValidator), 'missing required ' + document + '.'));
+        const requiredDocumentsForWorkers = bulletin.getrequiredDocumentsForWorkers();
+        requiredDocumentsForWorkers.forEach((document: Document) => {
+            this.addDocumentValidatorsForWorkers(document);
+        });
+        const requiredVaccinationsByNation = bulletin.getRequiredVaccinationsByNation();
+        for (var nation in requiredVaccinationsByNation) {
+            if (requiredVaccinationsByNation.hasOwnProperty(nation)) {
+                requiredVaccinationsByNation[nation].forEach((vaccine: Vaccine) => {
+                    this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasVaccinationValidator(vaccine))), 'missing required certificate of vaccination.'));
                 });
             }
         }
         const wantedName = bulletin.getWantedName();
         if (wantedName) {
-            this.detain.push(new Rule(new IsNotAWantedCriminalValidator(wantedName), 'Entrant is a wanted criminal.'));
+            this.detain.unshift(new Rule(new IsAWantedCriminalValidator(wantedName), 'Entrant is a wanted criminal.'));
         }
     }
 
-    private getDocumentValidator (document: Document): Validator {
-        let documentValidator;
+    private addDocumentValidatorsForNation (nation: Nation, document: Document) {
         switch (document) {
             case 'passport':
-                documentValidator = new HasPassportValidator();
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasPassportValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new NegateValidator(new IsPassportExpiredValidator()))), document + ' expired.'));
                 break;
-            /*case 'ID card':
-                documentValidator = new HasIDCardValidator();
-                break;*/
+            case 'ID card':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasIdCardValidator())), 'missing required ' + document + '.'));
+                break;
             case 'access permit':
-                documentValidator = new HasAccessPermitValidator();
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasAccessPermitValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new NegateValidator(new IsAccessPermitExpiredValidator()))), document + ' expired.'));
+                //if foreigner ->
+                //OR
+                //grant of asylum - valid
+                //OR
+                //diplomatic authorization - valid & Arstotzka in list of nations
                 break;
             /*case 'work pass':
                 documentValidator = new HasWorkPassValidator();
                 break;*/
             case 'grant of asylum':
-                documentValidator = new HasGrantOfAsylumValidator();
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasGrantOfAsylumValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new NegateValidator(new IsGrantOfAsylumExpiredValidator()))), document + ' expired.'));
                 break;
-            /*case 'certificate of vaccination':
-                documentValidator = new HasCertificateOfVaccinationValidator();
-                break;*/
             case 'diplomatic authorization':
-                documentValidator = new HasDiplomaticAuthorizationValidator();
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new HasDiplomaticAuthorizationValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsCitizenOfNationValidator(nation), new NegateValidator(new IsDiplomaticAuthorizationExpiredValidator()))), document + ' expired.'));
                 break;
         }
-        return documentValidator;
     }
 
-    private getGroupValidator (group: Group): Validator {
-        let groupValidator;
-        switch (group) {
-            case 'Workers': 
-                groupValidator = new IsWorkerValidator();
+    private addDocumentValidatorsForWorkers (document: Document) {
+        switch (document) {
+            case 'passport':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasPassportValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new NegateValidator(new IsPassportExpiredValidator()))), document + ' expired.'));
+                break;
+            case 'ID card':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasIdCardValidator())), 'missing required ' + document + '.'));
+                break;
+            case 'access permit':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasAccessPermitValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new NegateValidator(new IsAccessPermitExpiredValidator()))), document + ' expired.'));
+                //if foreigner ->
+                //OR
+                //grant of asylum - valid
+                //OR
+                //diplomatic authorization - valid & Arstotzka in list of nations
+                break;
+            /*case 'work pass':
+                documentValidator = new HasWorkPassValidator();
+                break;*/
+            case 'grant of asylum':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasGrantOfAsylumValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new NegateValidator(new IsGrantOfAsylumExpiredValidator()))), document + ' expired.'));
+                break;
+            case 'diplomatic authorization':
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasDiplomaticAuthorizationValidator())), 'missing required ' + document + '.'));
+                this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new NegateValidator(new IsDiplomaticAuthorizationExpiredValidator()))), document + ' expired.'));
                 break;
         }
-        return groupValidator;
     }
 
     public getRuleset (): Ruleset {
-        return new Ruleset(this.deny, this.detain);
+        return new Ruleset(this.detain, this.deny);
     }
 }

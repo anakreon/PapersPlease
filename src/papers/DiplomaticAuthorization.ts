@@ -2,13 +2,13 @@ import { Paper } from './Paper';
 import { Nation } from '../types';
 
 export class DiplomaticAuthorization extends Paper {
-    private nations: Nation[];
+    private access: Nation;
 
-    public setNations (nations: Nation[]): void {
-        this.nations = nations;
+    public setAccess (access: Nation): void {
+        this.access = access;
     }
 
-    public getNations (): Nation[] {
-        return this.nations;
+    public getAccess (): Nation {
+        return this.access;
     }
 }

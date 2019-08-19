@@ -1,13 +1,14 @@
 import { Papers, NationGetter } from '../types';
-import { InconsistencyValidator } from './InconsistencyValidator';
+import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class NationInconsistencyValidator extends InconsistencyValidator<NationGetter, string> {
+export class NationConsistencyValidator extends ConsistencyValidator<NationGetter, string> {
     protected getRelatedPapers (papers: Papers): NationGetter[] {
         return [ 
             papers.getAccessPermit(),
             papers.getDiplomaticAuthorization(),
             papers.getGrantOfAsylum(),
-            papers.getPassport()
+            papers.getPassport(),
+            papers.getIdCard()
         ];
     }
 

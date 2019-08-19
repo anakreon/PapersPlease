@@ -3,12 +3,14 @@ import { AccessPermit } from './papers/AccessPermit';
 import { GrantOfAsylum } from './papers/GrantOfAsylum';
 import { DiplomaticAuthorization } from './papers/DiplomaticAuthorization';
 import { PersonalData } from './papers/PersonalData';
+import { IdCard } from './papers/IdCard';
+import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
 
 export type Nation = 'Arstotzka' | 'Antegria' | 'Impor' | 'Kolechia' | 'Obristan' | 'Republia' | 'United Federation'
 export type Sex = 'M' | 'F';
 export type Purpose = 'TRANSIT' | 'WORK';
-export type Document = 'passport' | 'ID card' | 'access permit' | 'work pass' | 'grant of asylum' | 'certificate of vaccination' | 'diplomatic authorization';
-export type Group = 'Workers';
+export type Document = 'passport' | 'ID card' | 'access permit' | 'work pass' | 'grant of asylum' | 'diplomatic authorization';
+export type Vaccine = 'tuberculosis' | 'hepatitis B' | 'cholera' | 'cowpox' | 'yellow fever' | string;
 
 export type InspectionSuccess = 'Glory to Arstotzka.' | 'Cause no trouble.';
 export type InspectionFailure = string;//'Entry denied: reason'; 'Detainment: reason'
@@ -24,6 +26,12 @@ export interface InputPapers {
     diplomatic_authorization?: string;
 }
 
+export interface AccessSetter {
+    setAccess (access: Nation): void;
+}
+export interface AccessGetter {
+    getAccess (): Nation;
+}
 export interface DateOfBirthSetter {
     setDateOfBirth (dateOfBirth: Date): void;
 }
@@ -84,6 +92,12 @@ export interface SexSetter {
 export interface SexGetter {
     getSex (): string;
 }
+export interface VaccinesSetter {
+    setVaccines (vaccines: Vaccine[]): void;
+}
+export interface VaccinesGetter {
+    getVaccines (): Vaccine[];
+}
 export interface WeightSetter {
     setWeight (weight: string): void;
 }
@@ -96,6 +110,8 @@ export interface Papers {
     getAccessPermit (): AccessPermit;
     getGrantOfAsylum (): GrantOfAsylum;
     getDiplomaticAuthorization (): DiplomaticAuthorization;
+    getCertificateOfVaccination (): CertificateOfVaccination;
+    getIdCard (): IdCard;
     getPersonalData (): PersonalData;
 }
 

@@ -1,13 +1,14 @@
 import { Papers, NameGetter } from '../types';
-import { InconsistencyValidator } from './InconsistencyValidator';
+import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class NameInconsistencyValidator extends InconsistencyValidator<NameGetter, string> {
+export class NameConsistencyValidator extends ConsistencyValidator<NameGetter, string> {
     protected getRelatedPapers (papers: Papers): NameGetter[] {
         return [ 
             papers.getAccessPermit(),
             papers.getDiplomaticAuthorization(),
             papers.getGrantOfAsylum(),
-            papers.getPassport()
+            papers.getPassport(),
+            papers.getIdCard()
         ];
     }
 

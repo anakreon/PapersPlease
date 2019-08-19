@@ -3,6 +3,9 @@ import { Passport } from './Passport';
 import { Paper } from './Paper';
 import { AccessPermit } from './AccessPermit';
 import { GrantOfAsylum } from './GrantOfAsylum';
+import { DiplomaticAuthorization } from './DiplomaticAuthorization';
+import { CertificateOfVaccination } from './CertificateOfVaccination';
+import { IdCard } from './IdCard';
 
 export class PersonalData {
     private id: string;
@@ -29,10 +32,23 @@ export class PersonalData {
         this.height = grantOfAsylum.getHeight();
         this.weight = grantOfAsylum.getWeight();
     }
+    public fromDiplomaticAuthorization (diplomaticAuthorization: DiplomaticAuthorization): void {
+        this.addCommonValues(diplomaticAuthorization);
+    }
     private addCommonValues (paper: Paper): void {
         this.id = paper.getId();
         this.name = paper.getName();
         this.nation = paper.getNation();
+    }
+    public fromCertificateOfVaccination (certificateOfVaccination: CertificateOfVaccination): void {
+        this.id = certificateOfVaccination.getId();
+        this.name = certificateOfVaccination.getName();
+    }
+    public fromIdCard (idCard: IdCard): void {
+        this.name = idCard.getName();
+        this.height = idCard.getHeight();
+        this.weight = idCard.getWeight();
+        this.nation = idCard.getNation();
     }
 
     public getId (): string {
