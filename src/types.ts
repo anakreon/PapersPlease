@@ -5,6 +5,7 @@ import { DiplomaticAuthorization } from './papers/DiplomaticAuthorization';
 import { PersonalData } from './papers/PersonalData';
 import { IdCard } from './papers/IdCard';
 import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
+import { WorkPass } from './papers/WorkPass';
 
 export type Nation = 'Arstotzka' | 'Antegria' | 'Impor' | 'Kolechia' | 'Obristan' | 'Republia' | 'United Federation'
 export type Sex = 'M' | 'F';
@@ -27,7 +28,7 @@ export interface InputPapers {
 }
 
 export interface AccessSetter {
-    setAccess (access: Nation): void;
+    setAccess (access: Nation[]): void;
 }
 export interface AccessGetter {
     getAccess (): Nation;
@@ -112,6 +113,7 @@ export interface Papers {
     getDiplomaticAuthorization (): DiplomaticAuthorization;
     getCertificateOfVaccination (): CertificateOfVaccination;
     getIdCard (): IdCard;
+    getWorkPass (): WorkPass;
     getPersonalData (): PersonalData;
 }
 

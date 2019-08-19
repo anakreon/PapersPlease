@@ -5,6 +5,7 @@ import { DiplomaticAuthorization } from './papers/DiplomaticAuthorization';
 import { PersonalData } from './papers/PersonalData';
 import { IdCard } from './papers/IdCard';
 import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
+import { WorkPass } from './papers/WorkPass';
 
 export class Papers {
     private passport: Passport;
@@ -13,6 +14,7 @@ export class Papers {
     private diplomaticAuthorization: DiplomaticAuthorization;
     private certificateOfVaccination: CertificateOfVaccination;
     private idCard: IdCard;
+    private workPass: WorkPass;
     private personalData: PersonalData;
     
     constructor () {
@@ -43,6 +45,9 @@ export class Papers {
         this.idCard = idCard;
         this.personalData.fromIdCard(idCard);
     }
+    public setWorkPass (workPass: WorkPass): void {
+        this.workPass = workPass;
+    }
 
     public getPassport (): Passport {
         return this.passport;
@@ -61,6 +66,9 @@ export class Papers {
     }
     public getIdCard (): IdCard {
         return this.idCard;
+    }
+    public getWorkPass (): WorkPass {
+        return this.workPass;
     }
     public getPersonalData (): PersonalData {
         return this.personalData;

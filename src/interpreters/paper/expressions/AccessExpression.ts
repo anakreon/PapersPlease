@@ -6,6 +6,7 @@ export class AccessExpression extends Expression<AccessSetter> {
         return name === 'ACCESS';
     }
     protected setValue (setter: AccessSetter, value: Nation): void {
-        setter.setAccess(value);
+        const nations = <Nation[]>value.split(', ');
+        setter.setAccess(nations);
     }
 }

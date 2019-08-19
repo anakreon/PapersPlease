@@ -7,7 +7,8 @@ export class IdConsistencyValidator extends ConsistencyValidator<IdGetter, strin
             papers.getAccessPermit(),
             papers.getDiplomaticAuthorization(),
             papers.getGrantOfAsylum(),
-            papers.getPassport()
+            papers.getPassport(),
+            papers.getCertificateOfVaccination()
         ];
     }
 

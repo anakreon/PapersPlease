@@ -58,6 +58,7 @@ export class Bulletin {
         this.requiredVaccinationsByNation[nation].add(vaccine);
     }
     public noLongerRequireVaccinationForNation (nation: Nation, vaccine: Vaccine): void {
+        console.log('noLongerRequireVaccinationForNation', nation, vaccine, this.requiredVaccinationsByNation[nation]);
         this.requiredVaccinationsByNation[nation] = this.requiredVaccinationsByNation[nation] || new Set<Vaccine>();
         this.requiredVaccinationsByNation[nation].delete(vaccine);
     }

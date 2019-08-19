@@ -4,6 +4,9 @@ import { Nation, Vaccine } from '../../../types';
 
 export class RequireVaccinationForNationExpression extends Expression {
     protected processLine (line: string, bulletin: Bulletin): void {
+        const isNoLongerRule = line.includes('no longer');
+        if (isNoLongerRule) return;
+        
         const requireRegex = /^Citizens of (.*) require (.*) vaccination$/;
         const lineDecomposition = line.trim().match(requireRegex);
         if (!lineDecomposition) return;

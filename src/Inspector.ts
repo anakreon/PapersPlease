@@ -10,6 +10,7 @@ import { RulesetBuilder } from './RulesetBuilder';
 import { Ruleset } from './Ruleset';
 import { CertificateOfVaccinationInterpreter } from './interpreters/paper/CertificateOfVaccinationInterpreter';
 import { IdCardInterpreter } from './interpreters/paper/IdCardInterpreter';
+import { WorkPassInterpreter } from './interpreters/paper/WorkPassInterpreter';
 
 export class Inspector {
     private bulletin: Bulletin;
@@ -81,6 +82,11 @@ export class Inspector {
             const interpreter = new IdCardInterpreter();
             const idCard = interpreter.interpret(inputPapers.ID_card);
             papers.setIdCard(idCard);
+        }
+        if (inputPapers.work_pass) {
+            const interpreter = new WorkPassInterpreter();
+            const workPass = interpreter.interpret(inputPapers.work_pass);
+            papers.setWorkPass(workPass);
         }
         return papers;
     }

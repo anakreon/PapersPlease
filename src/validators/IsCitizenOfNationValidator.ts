@@ -5,7 +5,6 @@ export class IsCitizenOfNationValidator implements Validator {
 
     public validate (papers: Papers): boolean {
         const personalData = papers.getPersonalData();
-        const nation = personalData.getNation();
-        return !nation || nation === this.nationName;
+        return this.nationName === personalData.getNation();
     }
 }
