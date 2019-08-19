@@ -1,16 +1,10 @@
 import { InspectionResult, InputPapers } from './types';
 import { Papers } from './Papers';
-import { AccessPermitInterpreter } from './interpreters/paper/AccessPermitInterpreter';
-import { DiplomaticAuthorizationInterpreter } from './interpreters/paper/DiplomaticAuthorizationInterpreter';
-import { GrantOfAsylumInterpreter } from './interpreters/paper/GrantOfAsylumInterpreter';
-import { PassportInterpreter } from './interpreters/paper/PassportInterpreter';
 import { Bulletin } from './Bulletin';
 import { BulletinInterpreter } from './interpreters/bulletin/BulletinInterpreter';
 import { RulesetBuilder } from './RulesetBuilder';
 import { Ruleset } from './Ruleset';
-import { CertificateOfVaccinationInterpreter } from './interpreters/paper/CertificateOfVaccinationInterpreter';
-import { IdCardInterpreter } from './interpreters/paper/IdCardInterpreter';
-import { WorkPassInterpreter } from './interpreters/paper/WorkPassInterpreter';
+import { PapersInterpreter } from './PapersInterpreter';
 
 export class Inspector {
     private bulletin: Bulletin;
@@ -21,30 +15,35 @@ export class Inspector {
     }
     
     public receiveBulletin (inputBulletin: string): void {
-        console.log('inputBulletin', inputBulletin);
+        this.updateBulletin(inputBulletin);
+        this.ruleset = this.buildRuleset();
+    }
+    private updateBulletin (inputBulletin: string): void {
+        this.bulletin.clearWanted();
         const interpreter = new BulletinInterpreter();
-        interpreter.interpret(this.bulletin, inputBulletin);
+        interpreter.interpret(inputBulletin, this.bulletin);
+    }
+    private buildRuleset (): Ruleset {
         const rulesetBuilder = new RulesetBuilder();
         rulesetBuilder.fromBulletin(this.bulletin);
-        this.ruleset = rulesetBuilder.getRuleset();
-        console.log('updatedBulletin: ', this.bulletin);
-        console.log('updatedRuleset: ', this.ruleset);
+        return rulesetBuilder.getRuleset();
     }
 
     public inspect (inputPapers: InputPapers): InspectionResult {
-        console.log('inputPapers: ', inputPapers);
         const papers = this.buildPapers(inputPapers);
-        console.log('papers', papers);
+
         const detainmentRule = this.ruleset.getDetainmentRule(papers);
         if (detainmentRule) {
-            return 'Detainment: ' + detainmentRule.getErrorMessage();
+            return 'Detainment: ' + detainmentRule.getMessage();
         }
+
         const denialRule = this.ruleset.getDenialRule(papers);
         if (denialRule) {
-            return 'Entry denied: ' + denialRule.getErrorMessage();
+            return 'Entry denied: ' + denialRule.getMessage();
         }
         
-        if (papers.getPersonalData().getNation() === 'Arstotzka') {
+        const personalData = papers.getPersonalData();
+        if (personalData.isNationalOfArstotzka()) {
             return 'Glory to Arstotzka.';
         } else {
             return 'Cause no trouble.';
@@ -52,42 +51,7 @@ export class Inspector {
     }
 
     private buildPapers (inputPapers: InputPapers): Papers {
-        const papers = new Papers();
-        if (inputPapers.access_permit) {
-            const interpreter = new AccessPermitInterpreter();
-            const accessPermit = interpreter.interpret(inputPapers.access_permit);
-            papers.setAccessPermit(accessPermit);
-        }
-        if (inputPapers.diplomatic_authorization) {
-            const interpreter = new DiplomaticAuthorizationInterpreter();
-            const diplomaticAuthorization = interpreter.interpret(inputPapers.diplomatic_authorization);
-            papers.setDiplomaticAuthorization(diplomaticAuthorization);
-        }
-        if (inputPapers.grant_of_asylum) {
-            const interpreter = new GrantOfAsylumInterpreter();
-            const grantOfAsylum = interpreter.interpret(inputPapers.grant_of_asylum);
-            papers.setGrantOfAsylum(grantOfAsylum);
-        }
-        if (inputPapers.passport) {
-            const interpreter = new PassportInterpreter();
-            const passport = interpreter.interpret(inputPapers.passport);
-            papers.setPassport(passport);
-        }
-        if (inputPapers.certificate_of_vaccination) {
-            const interpreter = new CertificateOfVaccinationInterpreter();
-            const certificateOfVaccination = interpreter.interpret(inputPapers.certificate_of_vaccination);
-            papers.setCertificateOfVaccination(certificateOfVaccination);
-        }
-        if (inputPapers.ID_card) {
-            const interpreter = new IdCardInterpreter();
-            const idCard = interpreter.interpret(inputPapers.ID_card);
-            papers.setIdCard(idCard);
-        }
-        if (inputPapers.work_pass) {
-            const interpreter = new WorkPassInterpreter();
-            const workPass = interpreter.interpret(inputPapers.work_pass);
-            papers.setWorkPass(workPass);
-        }
-        return papers;
+        const interpreter = new PapersInterpreter();
+        return interpreter.interpret(inputPapers);
     }
 }

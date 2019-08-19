@@ -36,5 +36,4 @@ export class AccessPermit extends Paper {
     public getWeight (): string {
         return this.weight;
     }
-
 }

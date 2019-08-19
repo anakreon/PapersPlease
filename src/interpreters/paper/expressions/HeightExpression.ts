@@ -5,7 +5,7 @@ export class HeightExpression extends Expression<HeightSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'HEIGHT';
     }
-    protected setValue (setter: HeightSetter, value: string): void {
+    protected setValue (value: string, setter: HeightSetter): void {
         setter.setHeight(value);
     }
 }

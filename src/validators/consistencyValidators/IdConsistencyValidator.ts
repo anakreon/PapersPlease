@@ -1,7 +1,7 @@
-import { Papers, IdGetter } from '../types';
+import { Papers, IdGetter } from '../../types';
 import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class IdConsistencyValidator extends ConsistencyValidator<IdGetter, string> {
+export class IdConsistencyValidator extends ConsistencyValidator<IdGetter> {
     protected getRelatedPapers (papers: Papers): IdGetter[] {
         return [ 
             papers.getAccessPermit(),

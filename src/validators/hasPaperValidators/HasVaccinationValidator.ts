@@ -1,4 +1,4 @@
-import { Validator, Papers } from '../types';
+import { Validator, Papers } from '../../types';
 
 export class HasVaccinationValidator implements Validator {
     constructor (private vaccineName: string) {}

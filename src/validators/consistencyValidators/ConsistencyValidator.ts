@@ -1,6 +1,6 @@
-import { Validator, Papers } from '../types';
+import { Validator, Papers } from '../../types';
 
-export abstract class ConsistencyValidator<T, S> implements Validator {
+export abstract class ConsistencyValidator<T> implements Validator {
     public validate (papers: Papers): boolean {
         return this.getRelatedPapers(papers)
             .filter(this.hasPaper)
@@ -9,12 +9,12 @@ export abstract class ConsistencyValidator<T, S> implements Validator {
     }
 
     protected abstract getRelatedPapers (papers: Papers): T[];
-    protected abstract getFieldValue (paper: T): S;
+    protected abstract getFieldValue (paper: T): string;
 
     private hasPaper (paper: T): boolean {
         return !!paper;
     }
-    private isEveryValueSame(currentValue: S, index: number, array: S[]): boolean {
+    private isEveryValueSame(currentValue: string, index: number, array: string[]): boolean {
         return index === 0 || currentValue === array[index - 1];
     }
 }

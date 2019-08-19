@@ -10,7 +10,7 @@ export class NameExpression extends Expression<NameSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'NAME';
     }
-    protected setValue (setter: NameSetter, value: string): void {
+    protected setValue (value: string, setter: NameSetter): void {
         const name = this.getFormattedName(value);
         setter.setName(name);
     }

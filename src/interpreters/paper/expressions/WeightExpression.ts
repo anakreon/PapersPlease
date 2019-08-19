@@ -5,7 +5,7 @@ export class WeightExpression extends Expression<WeightSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'WEIGHT';
     }
-    protected setValue (setter: WeightSetter, value: string): void {
+    protected setValue (value: string, setter: WeightSetter): void {
         setter.setWeight(value);
     }
 }

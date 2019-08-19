@@ -1,34 +1,38 @@
 import { Ruleset } from './Ruleset';
 import { Rule } from './Rule';
-import { IdConsistencyValidator } from './validators/IdConsistencyValidator';
-import { DOBConsistencyValidator } from './validators/DOBConsistencyValidator';
-import { HeightConsistencyValidator } from './validators/HeightConsistencyValidator';
-import { NameConsistencyValidator } from './validators/NameConsistencyValidator';
-import { WeightConsistencyValidator } from './validators/WeightConsistencyValidator';
 import { Bulletin } from './Bulletin';
-import { Nation, Document, Validator, Vaccine } from './types';
-import { IsCitizenOfNationValidator } from './validators/IsCitizenOfNationValidator';
-import { ImplicativeValidator } from './validators/ImplicativeValidator';
-import { HasPassportValidator } from './validators/HasPassportValidator';
-import { HasAccessPermitValidator } from './validators/HasAccessPermitValidator';
-import { HasGrantOfAsylumValidator } from './validators/HasGrantOfAsylumValidator';
-import { HasDiplomaticAuthorizationValidator } from './validators/HasDiplomaticAuthorizationValidator';
-import { IsWorkerValidator } from './validators/IsWorkerValidator';
-import { IsAWantedCriminalValidator } from './validators/IsAWantedCriminalValidator';
-import { IsPassportExpiredValidator } from './validators/IsPassportExpiredValidator';
-import { IsAccessPermitExpiredValidator } from './validators/IsAccessPermitExpiredValidator';
-import { IsGrantOfAsylumExpiredValidator } from './validators/IsGrantOfAsylumExpiredValidator';
-import { IsDiplomaticAuthorizationExpiredValidator } from './validators/IsDiplomaticAuthorizationExpiredValidator';
-import { NegateValidator } from './validators/NegateValidator';
-import { NationConsistencyValidator } from './validators/NationConsistencyValidator';
-import { HasIdCardValidator } from './validators/HasIDCardValidator';
-import { HasVaccinationValidator } from './validators/HasVaccinationValidator';
+import { Nation, Document, Vaccine } from './types';
 import { Arstotzka } from './constants';
+
+import { DOBConsistencyValidator } from './validators/consistencyValidators/DOBConsistencyValidator';
+import { HeightConsistencyValidator } from './validators/consistencyValidators/HeightConsistencyValidator';
+import { IdConsistencyValidator } from './validators/consistencyValidators/IdConsistencyValidator';
+import { NameConsistencyValidator } from './validators/consistencyValidators/NameConsistencyValidator';
+import { NationConsistencyValidator } from './validators/consistencyValidators/NationConsistencyValidator';
+import { WeightConsistencyValidator } from './validators/consistencyValidators/WeightConsistencyValidator';
+
+import { HasAccessPermitValidator } from './validators/hasPaperValidators/HasAccessPermitValidator';
+import { HasCertificateOfVaccinationValidator } from './validators/hasPaperValidators/HasCertificateOfVaccinationValidator';
+import { HasDiplomaticAuthorizationValidator } from './validators/hasPaperValidators/HasDiplomaticAuthorizationValidator';
+import { HasIdCardValidator } from './validators/hasPaperValidators/HasIDCardValidator';
+import { HasGrantOfAsylumValidator } from './validators/hasPaperValidators/HasGrantOfAsylumValidator';
+import { HasPassportValidator } from './validators/hasPaperValidators/HasPassportValidator';
+import { HasVaccinationValidator } from './validators/hasPaperValidators/HasVaccinationValidator';
+import { HasWorkPassValidator } from './validators/hasPaperValidators/HasWorkPassValidator';
+
+import { IsAccessPermitExpiredValidator } from './validators/isPaperExpiredValidators/IsAccessPermitExpiredValidator';
+import { IsDiplomaticAuthorizationExpiredValidator } from './validators/isPaperExpiredValidators/IsDiplomaticAuthorizationExpiredValidator';
+import { IsGrantOfAsylumExpiredValidator } from './validators/isPaperExpiredValidators/IsGrantOfAsylumExpiredValidator';
+import { IsPassportExpiredValidator } from './validators/isPaperExpiredValidators/IsPassportExpiredValidator';
+
 import { DisjunctiveValidator } from './validators/DisjunctiveValidator';
-import { HasWorkPassValidator } from './validators/HasWorkPassValidator';
-import { HasCertificateOfVaccinationValidator } from './validators/HasCertificateOfVaccinationValidator';
-import { IsValidDiplomaticAuthorizationValidator } from './validators/IsValidDiplomaticAuthorizationValidator';
+import { ImplicativeValidator } from './validators/ImplicativeValidator';
+import { IsAWantedCriminalValidator } from './validators/IsAWantedCriminalValidator';
+import { IsCitizenOfNationValidator } from './validators/IsCitizenOfNationValidator';
 import { IsCitizenOfUnknownNationValidator } from './validators/IsCitizenOfUnknownNationValidator';
+import { IsWorkerValidator } from './validators/IsWorkerValidator';
+import { IsValidDiplomaticAuthorizationValidator } from './validators/IsValidDiplomaticAuthorizationValidator';
+import { NegateValidator } from './validators/NegateValidator';
 
 export class RulesetBuilder {
     private deny: Rule[] = [
@@ -44,10 +48,19 @@ export class RulesetBuilder {
     ];
 
     public fromBulletin (bulletin: Bulletin): void {
+        this.addPriorityWantedCriminalRule(bulletin);
+        this.addRulesForDocumentsRequiredForNations(bulletin);
+        this.addRulesForBannedNations(bulletin);
+        this.addRulesForDocumentsRequiredForWorkers(bulletin);
+        this.addRulesForVaccinationsRequiredForNations(bulletin);
+    }
+    private addPriorityWantedCriminalRule (bulletin: Bulletin): void {
         const wantedName = bulletin.getWantedName();
         if (wantedName) {
             this.detain.unshift(new Rule(new IsAWantedCriminalValidator(wantedName), 'Entrant is a wanted criminal.'));
         }
+    }
+    private addRulesForDocumentsRequiredForNations (bulletin: Bulletin): void {
         const requiredDocumentsByNation = bulletin.getRequiredDocumentsByNation();
         for (var nation in requiredDocumentsByNation) {
             if (requiredDocumentsByNation.hasOwnProperty(nation)) {
@@ -56,13 +69,19 @@ export class RulesetBuilder {
                 });
             }
         }
-        bulletin.getDenied().forEach((nation: Nation) => {
+    }
+    private addRulesForBannedNations (bulletin: Bulletin): void {
+        bulletin.getDeniedNations().forEach((nation: Nation) => {
             this.deny.push(new Rule(new IsCitizenOfNationValidator(nation), 'citizen of banned nation.'));
         });
-        const requiredDocumentsForWorkers = bulletin.getrequiredDocumentsForWorkers();
+    }
+    private addRulesForDocumentsRequiredForWorkers (bulletin: Bulletin): void {
+        const requiredDocumentsForWorkers = bulletin.getRequiredDocumentsForWorkers();
         requiredDocumentsForWorkers.forEach((document: Document) => {
             this.addDocumentValidatorsForWorkers(document);
         });
+    }
+    private addRulesForVaccinationsRequiredForNations (bulletin: Bulletin): void {
         const requiredVaccinationsByNation = bulletin.getRequiredVaccinationsByNation();
         for (var nation in requiredVaccinationsByNation) {
             if (requiredVaccinationsByNation.hasOwnProperty(nation)) {
@@ -127,11 +146,6 @@ export class RulesetBuilder {
             case 'access permit':
                 this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasAccessPermitValidator())), 'missing required ' + document + '.'));
                 this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new NegateValidator(new IsAccessPermitExpiredValidator()))), document + ' expired.'));
-                //if foreigner ->
-                //OR
-                //grant of asylum - valid
-                //OR
-                //diplomatic authorization - valid & Arstotzka in list of nations
                 break;
             case 'work pass':
                 this.deny.push(new Rule(new NegateValidator(new ImplicativeValidator(new IsWorkerValidator(), new HasWorkPassValidator())), 'missing required ' + document + '.'));

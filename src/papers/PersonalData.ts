@@ -6,6 +6,7 @@ import { GrantOfAsylum } from './GrantOfAsylum';
 import { DiplomaticAuthorization } from './DiplomaticAuthorization';
 import { CertificateOfVaccination } from './CertificateOfVaccination';
 import { IdCard } from './IdCard';
+import { Arstotzka } from '../constants';
 
 export class PersonalData {
     private id: string;
@@ -13,8 +14,6 @@ export class PersonalData {
     private nation: Nation;
     private dateOfBirth: Date;
     private sex: Sex;
-    private height: string;
-    private weight: string;
 
     public fromPassport (passport: Passport): void {
         this.addCommonValues(passport);
@@ -23,14 +22,10 @@ export class PersonalData {
     }
     public fromAccessPermit (accessPermit: AccessPermit): void {
         this.addCommonValues(accessPermit);
-        this.height = accessPermit.getHeight();
-        this.weight = accessPermit.getWeight();
     }
     public fromGrantOfAsylum (grantOfAsylum: GrantOfAsylum): void {
         this.addCommonValues(grantOfAsylum);
         this.dateOfBirth = grantOfAsylum.getDateOfBirth();
-        this.height = grantOfAsylum.getHeight();
-        this.weight = grantOfAsylum.getWeight();
     }
     public fromDiplomaticAuthorization (diplomaticAuthorization: DiplomaticAuthorization): void {
         this.addCommonValues(diplomaticAuthorization);
@@ -46,11 +41,12 @@ export class PersonalData {
     }
     public fromIdCard (idCard: IdCard): void {
         this.name = idCard.getName();
-        this.height = idCard.getHeight();
-        this.weight = idCard.getWeight();
         this.nation = idCard.getNation();
     }
 
+    public isNationalOfArstotzka () {
+        return this.nation === Arstotzka;
+    }
     public getId (): string {
         return this.id;
     }

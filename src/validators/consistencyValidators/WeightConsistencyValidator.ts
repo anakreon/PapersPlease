@@ -1,7 +1,7 @@
-import { Papers, WeightGetter } from '../types';
+import { Papers, WeightGetter } from '../../types';
 import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class WeightConsistencyValidator extends ConsistencyValidator<WeightGetter, string> {
+export class WeightConsistencyValidator extends ConsistencyValidator<WeightGetter> {
     protected getRelatedPapers (papers: Papers): WeightGetter[] {
         return [ 
             papers.getAccessPermit(),

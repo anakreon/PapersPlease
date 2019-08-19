@@ -5,7 +5,7 @@ export class DurationExpression extends Expression<DurationSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'DURATION';
     }
-    protected setValue (setter: DurationSetter, value: string): void {
+    protected setValue (value: string, setter: DurationSetter): void {
         setter.setDuration(value);
     }
 }

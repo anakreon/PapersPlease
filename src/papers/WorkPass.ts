@@ -1,3 +1,1 @@
-export class WorkPass {
-
-}
+export class WorkPass {}

@@ -5,7 +5,7 @@ export class VaccinesExpression extends Expression<VaccinesSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'VACCINES';
     }
-    protected setValue (setter: VaccinesSetter, value: string): void {
+    protected setValue (value: string, setter: VaccinesSetter): void {
         const vaccines = value.split(', ');
         setter.setVaccines(vaccines);
     }

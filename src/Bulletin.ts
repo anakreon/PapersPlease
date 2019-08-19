@@ -2,7 +2,7 @@ import { Nation, Document, Vaccine } from './types';
 import { allNations, foreignNations } from './constants';
 
 export class Bulletin {
-    private denied: Set<Nation>;
+    private deniedNations: Set<Nation>;
     private requiredDocumentsByNation: { [nation: string]: Set<Document> };
     private requiredDocumentsForWorkers: Set<Document>;
     private requiredVaccinationsByNation: { [nation: string]: Set<Vaccine> };
@@ -10,7 +10,7 @@ export class Bulletin {
     private wantedName: string;
 
     constructor () {
-        this.denied = new Set<Nation>(allNations);
+        this.deniedNations = new Set<Nation>(allNations);
         this.requiredDocumentsByNation = {};
         this.requiredDocumentsForWorkers = new Set<Document>();
         this.requiredVaccinationsByNation = {};
@@ -19,17 +19,18 @@ export class Bulletin {
     }
     
     public allow (nation: Nation): void {
-        if (this.denied.has(nation)) {
-            this.denied.delete(nation);
+        if (this.deniedNations.has(nation)) {
+            this.deniedNations.delete(nation);
         }
     }
     public deny (nation: Nation): void {
-        this.denied.add(nation);
+        this.deniedNations.add(nation);
     }
     public requireDocumentForNation (nation: Nation, document: Document): void {
         this.requiredDocumentsByNation[nation] = this.requiredDocumentsByNation[nation] || new Set<Document>();
         this.requiredDocumentsByNation[nation].add(document);
     }
+
     public noLongerRequireDocumentForNation (nation: Nation, document: Document): void {
         this.requiredDocumentsByNation[nation] = this.requiredDocumentsByNation[nation] || new Set<Document>();
         this.requiredDocumentsByNation[nation].delete(document);
@@ -58,7 +59,6 @@ export class Bulletin {
         this.requiredVaccinationsByNation[nation].add(vaccine);
     }
     public noLongerRequireVaccinationForNation (nation: Nation, vaccine: Vaccine): void {
-        console.log('noLongerRequireVaccinationForNation', nation, vaccine, this.requiredVaccinationsByNation[nation]);
         this.requiredVaccinationsByNation[nation] = this.requiredVaccinationsByNation[nation] || new Set<Vaccine>();
         this.requiredVaccinationsByNation[nation].delete(vaccine);
     }
@@ -108,19 +108,19 @@ export class Bulletin {
         this.wantedName = '';
     }
 
-    public getDenied (): Set<Nation> {
-        return this.denied;
+    public getDeniedNations (): Set<Nation> {
+        return this.deniedNations;
     }
     public getRequiredDocumentsByNation (): { [nation: string]: Set<Document> } {
         return this.requiredDocumentsByNation;
     }
-    public getrequiredDocumentsForWorkers (): Set<Document> {
+    public getRequiredDocumentsForWorkers (): Set<Document> {
         return this.requiredDocumentsForWorkers;
     }
     public getRequiredVaccinationsByNation (): { [nation: string]: Set<Vaccine> } {
         return this.requiredVaccinationsByNation;
     }
-    public getrequiredVaccinationsForWorkers (): Set<Vaccine> {
+    public getRequiredVaccinationsForWorkers (): Set<Vaccine> {
         return this.requiredVaccinationsForWorkers;
     }
     public getWantedName (): string {

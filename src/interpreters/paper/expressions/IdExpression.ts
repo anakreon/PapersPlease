@@ -5,7 +5,7 @@ export class IdExpression extends Expression<IdSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'ID#';
     }
-    protected setValue (setter: IdSetter, value: string): void {
+    protected setValue (value: string, setter: IdSetter): void {
         setter.setId(value);
     }
 }

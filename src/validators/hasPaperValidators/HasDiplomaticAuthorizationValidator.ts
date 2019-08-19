@@ -1,4 +1,4 @@
-import { Validator, Papers } from '../types';
+import { Validator, Papers } from '../../types';
 
 export class HasDiplomaticAuthorizationValidator implements Validator {
     public validate (papers: Papers): boolean {

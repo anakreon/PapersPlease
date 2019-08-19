@@ -1,7 +1,7 @@
-import { Papers, HeightGetter } from '../types';
+import { Papers, HeightGetter } from '../../types';
 import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class HeightConsistencyValidator extends ConsistencyValidator<HeightGetter, string> {
+export class HeightConsistencyValidator extends ConsistencyValidator<HeightGetter> {
     protected getRelatedPapers (papers: Papers): HeightGetter[] {
         return [ 
             papers.getAccessPermit(),

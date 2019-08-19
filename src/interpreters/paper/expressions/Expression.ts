@@ -1,19 +1,22 @@
 export abstract class Expression<T> {
     public interpret (input: string, setter: T) {
-        const lines = input.split('\n');
-        lines.forEach((line: string) => {
-            const lineDecomposition = line.trim().match(/^([A-Z#]*):\ (.*)$/);
-            if (lineDecomposition.length != 3) {
-                throw 'Invalid input: ' + line;
-            }
-            const name = lineDecomposition[1];
-            const value = lineDecomposition[2];
-            if (this.isHandledName(name)) {
-                this.setValue(setter, value);
-            }
-        });
+        input
+            .split('\n')
+            .forEach((line: string) => this.interpretLine(line, setter));
+    }
+
+    private interpretLine (line: string, setter: T): void {
+        const regExp = /^([A-Z#]*):\ (.*)$/;
+        const lineDecomposition = line.trim().match(regExp);
+        if (lineDecomposition.length != 3) {
+            throw 'Invalid input: ' + line;
+        }
+        const [all, name, value] = lineDecomposition;
+        if (this.isHandledName(name)) {
+            this.setValue(value, setter);
+        }
     }
 
     protected abstract isHandledName (name: string): boolean;
-    protected abstract setValue (setter: T, value: string): void
+    protected abstract setValue (value: string, setter: T): void
 }

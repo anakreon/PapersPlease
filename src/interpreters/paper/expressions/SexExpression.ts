@@ -5,7 +5,7 @@ export class SexExpression extends Expression<SexSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'SEX';
     }
-    protected setValue (setter: SexSetter, value: string): void {
+    protected setValue (value: string, setter: SexSetter): void {
         setter.setSex(value);
     }
 }

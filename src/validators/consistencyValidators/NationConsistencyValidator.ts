@@ -1,8 +1,8 @@
-import { Papers, NameGetter } from '../types';
+import { Papers, NationGetter } from '../../types';
 import { ConsistencyValidator } from './ConsistencyValidator';
 
-export class NameConsistencyValidator extends ConsistencyValidator<NameGetter, string> {
-    protected getRelatedPapers (papers: Papers): NameGetter[] {
+export class NationConsistencyValidator extends ConsistencyValidator<NationGetter> {
+    protected getRelatedPapers (papers: Papers): NationGetter[] {
         return [ 
             papers.getAccessPermit(),
             papers.getDiplomaticAuthorization(),
@@ -12,7 +12,7 @@ export class NameConsistencyValidator extends ConsistencyValidator<NameGetter, s
         ];
     }
 
-    protected getFieldValue (paper: NameGetter): string {
-        return paper.getName();
+    protected getFieldValue (paper: NationGetter): string {
+        return paper.getNation();
     }
 }

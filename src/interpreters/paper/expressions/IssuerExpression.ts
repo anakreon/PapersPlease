@@ -5,7 +5,7 @@ export class IssuerExpression extends Expression<IssuerSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'ISS';
     }
-    protected setValue (setter: IssuerSetter, value: string): void {
+    protected setValue (value: string, setter: IssuerSetter): void {
         setter.setIssuer(value);
     }
 }

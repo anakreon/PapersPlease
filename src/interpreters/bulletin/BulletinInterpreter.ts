@@ -22,9 +22,7 @@ import { WantedByExpression } from './expressions/WantedByExpression';
 
 export class BulletinInterpreter {
 
-    public interpret (bulletin: Bulletin, input: string) {
-        bulletin.clearWanted(); //?
-
+    public interpret (input: string, bulletin: Bulletin) {
         const tree = <Expression[]> [];
         tree.push(new AllowExpression());
         tree.push(new DenyExpression());

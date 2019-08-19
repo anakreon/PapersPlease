@@ -5,7 +5,7 @@ export class PurposeExpression extends Expression<PurposeSetter> {
     protected isHandledName (name: string): boolean {
         return name === 'PURPOSE';
     }
-    protected setValue (setter: PurposeSetter, value: string): void {
+    protected setValue (value: string, setter: PurposeSetter): void {
         setter.setPurpose(value);
     }
 }
