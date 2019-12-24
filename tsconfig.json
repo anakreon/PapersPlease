@@ -1,7 +1,15 @@
 {
     "compilerOptions": {
-        "sourceMap": false,
-        "target": "es6",
+        "sourceMap": true,
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "allowJs": true,
         "lib": ["es2017", "dom"] 
     },
 }

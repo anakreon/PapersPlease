@@ -14,7 +14,7 @@ import { WeightConsistencyValidator } from './validators/consistencyValidators/W
 import { HasAccessPermitValidator } from './validators/hasPaperValidators/HasAccessPermitValidator';
 import { HasCertificateOfVaccinationValidator } from './validators/hasPaperValidators/HasCertificateOfVaccinationValidator';
 import { HasDiplomaticAuthorizationValidator } from './validators/hasPaperValidators/HasDiplomaticAuthorizationValidator';
-import { HasIdCardValidator } from './validators/hasPaperValidators/HasIDCardValidator';
+import { HasIdCardValidator } from './validators/hasPaperValidators/HasIdCardValidator';
 import { HasGrantOfAsylumValidator } from './validators/hasPaperValidators/HasGrantOfAsylumValidator';
 import { HasPassportValidator } from './validators/hasPaperValidators/HasPassportValidator';
 import { HasVaccinationValidator } from './validators/hasPaperValidators/HasVaccinationValidator';
