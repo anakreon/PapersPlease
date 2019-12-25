@@ -9,7 +9,9 @@
         "clear:all": "rm -rf node_modules/ npm-debug.log && npm run clear",
         "coverage": "nyc npm run test && nyc report --reporter=html",
         "coveralls": "nyc npm run test && nyc report --reporter=text-lcov | coveralls -v",
-        "test": "jasmine --reporter=jasmine-console-reporter --config=jasmine.json"
+        "test": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine.json",
+        "test:interpreters": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine-interpreters.json",
+        "test:validators": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine-validators.json"
     },
     "author": "",
     "license": "ISC",
