@@ -13,10 +13,6 @@ export class Inspector {
     constructor () {
         this.bulletin = new Bulletin();
     }
-
-    public test () {
-        return 'asdf';
-    }
     
     public receiveBulletin (inputBulletin: string): void {
         this.updateBulletin(inputBulletin);

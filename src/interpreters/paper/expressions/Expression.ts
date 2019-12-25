@@ -8,7 +8,7 @@ export abstract class Expression<T> {
     private interpretLine (line: string, setter: T): void {
         const regExp = /^([A-Z#]*):\ (.*)$/;
         const lineDecomposition = line.trim().match(regExp);
-        if (lineDecomposition.length != 3) {
+        if (!lineDecomposition || lineDecomposition.length != 3) {
             throw 'Invalid input: ' + line;
         }
         const [all, name, value] = lineDecomposition;
