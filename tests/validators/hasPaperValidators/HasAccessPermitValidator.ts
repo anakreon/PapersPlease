@@ -2,7 +2,7 @@ import { HasAccessPermitValidator } from '../../../src/validators/hasPaperValida
 import { Papers } from '../../../src/Papers';
 import { AccessPermit } from '../../../src/papers/AccessPermit';
 
-describe('HasAccessPermitValidator', () => {
+describe('HasAccessPermitValidator #accessPermitValidator', () => {
     it('has access permit', function () {
         const papers = new Papers();
         const accessPermit = new AccessPermit();

@@ -8,7 +8,7 @@ describe('IsWorkerValidator', () => {
         const validator = new IsWorkerValidator();
         expect(validator.validate(papers)).toBeFalsy();
     });
-    it('has access permit, not worker permit', function () {
+    it('has access permit, not worker permit #accessPermitValidator', function () {
         const papers = new Papers();
         const accessPermit = new AccessPermit();
         accessPermit.setPurpose('TRANSIT');
@@ -17,7 +17,7 @@ describe('IsWorkerValidator', () => {
         const validator = new IsWorkerValidator();
         expect(validator.validate(papers)).toBeFalsy();
     });
-    it('has access permit, is worker permit', function () {
+    it('has access permit, is worker permit #accessPermitValidator', function () {
         const papers = new Papers();
         const accessPermit = new AccessPermit();
         accessPermit.setPurpose('WORK');

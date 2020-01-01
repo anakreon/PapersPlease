@@ -2,7 +2,7 @@ import { IsAccessPermitExpiredValidator } from '../../../src/validators/isPaperE
 import { Papers } from '../../../src/Papers';
 import { AccessPermit } from '../../../src/papers/AccessPermit';
 
-describe('IsAccessPermitExpiredValidator', () => {
+describe('IsAccessPermitExpiredValidator #accessPermitValidator', () => {
     it('no access permit, not expired', function () {
         const papers = new Papers();
         const validator = new IsAccessPermitExpiredValidator();

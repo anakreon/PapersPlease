@@ -2,7 +2,7 @@ import { HasPassportValidator } from '../../../src/validators/hasPaperValidators
 import { Papers } from '../../../src/Papers';
 import { Passport } from '../../../src/papers/Passport';
 
-describe('HasPassportValidator', () => {
+describe('HasPassportValidator #passportValidator', () => {
     it('has passport', function () {
         const papers = new Papers();
         const passport = new Passport();

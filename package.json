@@ -10,6 +10,8 @@
         "coverage": "nyc npm run test && nyc report --reporter=html",
         "coveralls": "nyc npm run test && nyc report --reporter=text-lcov | coveralls -v",
         "test": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine.json",
+        "test:passport-validators": "jasmine --filter=\"#passportValidator\" --reporter=jasmine-console-reporter --config=config/jasmine.json",
+        "test:access-permit-validators": "jasmine --filter=\"#accessPermitValidator\" --reporter=jasmine-console-reporter --config=config/jasmine.json",
         "test:interpreters": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine-interpreters.json",
         "test:validators": "jasmine --reporter=jasmine-console-reporter --config=config/jasmine-validators.json"
     },

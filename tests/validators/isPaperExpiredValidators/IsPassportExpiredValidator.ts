@@ -2,7 +2,7 @@ import { IsPassportExpiredValidator } from '../../../src/validators/isPaperExpir
 import { Papers } from '../../../src/Papers';
 import { Passport } from '../../../src/papers/Passport';
 
-describe('IsPassportExpiredValidator', () => {
+describe('IsPassportExpiredValidator #passportValidator', () => {
     it('no passport, not expired', function () {
         const papers = new Papers();
         const validator = new IsPassportExpiredValidator();

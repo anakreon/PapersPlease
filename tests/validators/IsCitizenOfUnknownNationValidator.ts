@@ -3,7 +3,7 @@ import { Papers } from '../../src/Papers';
 import { Passport } from '../../src/papers/Passport';
 
 describe('IsCitizenOfUnknownNationValidator', () => {
-    it('has nation set from passport', function () {
+    it('has nation set from passport #passportValidator', function () {
         const papers = new Papers();
         const passport = new Passport();
         passport.setNation('Arstotzka');

@@ -8,7 +8,7 @@ describe('IsAWantedCriminalValidator', () => {
         criminalName = 'Bad Criminal';
     });
 
-    it('is, has name set from passport', function () {
+    it('is, has name set from passport #passportValidator', function () {
         const papers = new Papers();
         const passport = new Passport();
         passport.setName(criminalName);
@@ -17,7 +17,7 @@ describe('IsAWantedCriminalValidator', () => {
         const validator = new IsAWantedCriminalValidator(criminalName);
         expect(validator.validate(papers)).toBeTruthy();
     });
-    it('is not, different name, has name set from passport', function () {
+    it('is not, different name, has name set from passport #passportValidator', function () {
         const papers = new Papers();
         const passport = new Passport();
         passport.setName('ImNot Criminal');
