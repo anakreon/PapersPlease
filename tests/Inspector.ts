@@ -1,35 +1,50 @@
 import { Inspector } from '../src/Inspector';
-import data from './data';
-import { Papers } from '../src/Papers';
-import { Passport } from '../src/papers/Passport';
+import { InputPapers } from '../src/types';
+import testDataOne from './InspectorTestDataOne';
+import testDataTwo from './InspectorTestDataTwo';
 
-describe('Inspector', () => {
-    let inspector: Inspector;
-    beforeEach(function () {
-        inspector = new Inspector();
-    });
-    describe('receiveBulletin', () => {
-        it('', () => {
-            /*const bulletin = `Entrants require passport
-                Allow citizens of Arstotzka, Obristan`;
-            inspector.receiveBulletin(bulletin);
-            const inst: any = inspector;
+describe('Inspector #inspector', () => {
+    it('one - 2-way', () => {
+        const bulletin = `Entrants require passport\nAllow citizens of Arstotzka, Obristan\nCitizens of Obristan require access permit`;
 
+        const inspector = new Inspector();
+        inspector.receiveBulletin(bulletin);
 
-            const papers = new Papers();
-            const passport = new Passport();
-            papers.setPassport(passport);*/
-
-            //inst.ruleset.getDetainmentRule(papers)
-            //inst.ruleset.getDenialRule(papers)
-        
+        testDataOne.forEach((data) => {
+            const entrant: InputPapers = {
+                passport: `ID#: ${data.passport.id}
+                NATION: ${data.passport.nation}
+                NAME: ${data.passport.name}
+                DOB: 1933.11.28
+                SEX: M
+                ISS: East Grestin
+                EXP: ${data.passport.exp}`
+            };
+            if (data.accessPermit) {
+                entrant.access_permit = `ID#: ${data.accessPermit.id}
+                NAME: ${data.accessPermit.name}
+                NATION: ${data.accessPermit.nation}`
+            }
+            expect(inspector.inspect(entrant)).toBe(data.expectedResult);
         });
     });
+    it('two - mixed', function () {
+        const bulletin = `Entrants require passport\nAllow citizens of Arstotzka`;
 
-    /*it('async', (done) => {
-        setTimeout(() => {
-            expect(1).toEqual(1);
-            done();
-        }, 3000);
-    });*/
+        const inspector = new Inspector();
+        inspector.receiveBulletin(bulletin);
+
+        testDataTwo.forEach((data) => {
+            const entrant: InputPapers = {
+                passport:`ID#: ${data.passport.id}
+                NATION: Arstotzka
+                NAME: ${data.passport.name}
+                DOB: 1933.11.28
+                SEX: ${data.passport.sex}
+                ISS: East Grestin
+                EXP: ${data.passport.exp}`
+            };
+            expect(inspector.inspect(entrant)).toBe(data.expectedResult);
+        });
+    });
 });
