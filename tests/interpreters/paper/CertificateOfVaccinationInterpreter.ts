@@ -6,7 +6,7 @@ type InputOutput = {
     id?: string;
     name?: string;
     vaccines?: string[];
-}
+};
 
 describe('CertificateOfVaccinationInterpreter', () => {
     let interpreter: CertificateOfVaccinationInterpreter;
