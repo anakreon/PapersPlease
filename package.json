@@ -1,9 +1,12 @@
 {
     "name": "papersplease",
-    "version": "1.0.0",
+    "version": "1.0.7",
     "description": "",
-    "main": "index.js",
+    "main": "lib/index.js",
+    "types": "lib/types.d.ts",
     "scripts": {
+        "prepublish": "tsc --project tsconfig.npm.json",
+        "build": "tsc --project tsconfig.npm.json",
         "start": "webpack && node dist/bundle.js",
         "clear": "rm -rf dist/ coverage/ .nyc_output/",
         "clear:all": "rm -rf node_modules/ npm-debug.log && npm run clear",
