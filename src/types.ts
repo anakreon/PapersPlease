@@ -7,6 +7,7 @@ import { IdCard } from './papers/IdCard';
 import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
 import { WorkPass } from './papers/WorkPass';
 import { Inspector } from './Inspector';
+import { PapersInterpreter } from './PapersInterpreter';
 
 export type Nation = 'Arstotzka' | 'Antegria' | 'Impor' | 'Kolechia' | 'Obristan' | 'Republia' | 'United Federation'
 export type Sex = 'M' | 'F';
@@ -122,4 +123,4 @@ export interface Validator {
     validate (papers: Papers): boolean;
 }
 
-export { Inspector };
+export { Inspector, PapersInterpreter };

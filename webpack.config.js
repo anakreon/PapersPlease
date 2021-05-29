@@ -1,7 +1,7 @@
 module.exports = {
     mode: "development",
     devtool: "inline-source-map",
-    entry: './src/index.js',
+    entry: './src/index.ts',
     output: {
         filename: "bundle.js"
     },
