@@ -8,6 +8,8 @@ import { CertificateOfVaccination } from './papers/CertificateOfVaccination';
 import { WorkPass } from './papers/WorkPass';
 import { Inspector } from './Inspector';
 import { PapersInterpreter } from './PapersInterpreter';
+import { Bulletin } from './Bulletin';
+import { BulletinInterpreter } from './interpreters/bulletin/BulletinInterpreter';
 
 export type Nation = 'Arstotzka' | 'Antegria' | 'Impor' | 'Kolechia' | 'Obristan' | 'Republia' | 'United Federation'
 export type Sex = 'M' | 'F';
@@ -123,4 +125,4 @@ export interface Validator {
     validate (papers: Papers): boolean;
 }
 
-export { Inspector, PapersInterpreter };
+export { Inspector, PapersInterpreter, Bulletin, BulletinInterpreter };
