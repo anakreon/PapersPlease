@@ -29,10 +29,10 @@
         "jasmine": "^3.5.0",
         "jasmine-console-reporter": "^3.1.0",
         "nyc": "^15.0.0",
-        "ts-loader": "^6.0.4",
+        "ts-loader": "^9.4.2",
         "ts-node": "^8.5.4",
         "typescript": "^3.5.3",
-        "webpack": "^4.39.2",
-        "webpack-cli": "^3.3.6"
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1"
     }
 }
